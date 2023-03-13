@@ -16,18 +16,21 @@ class Movies extends Component {
 
     handleDelete = (id) => {
         let movies = this.state.moviesToShow.filter(m => m._id !== id);
-        // this.setState({ movies });
-        // let index = this.state.moviesToShow.find(m => m._id !== id);
-        // this.state.moviesToShow.splice(index, 1);
-        this.setState({ moviesToShow: movies });
+        let movie = this.state.movies.find(m => m._id === id);
+        let index = this.state.movies.indexOf(movie);
+        const allMovie = [...this.state.movies];
+        allMovie.splice(index, 1);
+        this.setState({ movies: allMovie, moviesToShow: movies });
     }
 
     handleLike = (movie) => {
         const movies = [...this.state.moviesToShow];
-        const index = movies.indexOf(movie);
-        movies[index] = { ...movies[index] };
-        movies[index].isLiked = !movies[index].isLiked;
-        this.setState({ moviesToShow: movies });
+        const index1 = movies.indexOf(movie);
+        movies[index1] = { ...movies[index1] };
+        movies[index1].isLiked = !movies[index1].isLiked;
+        const index2 = this.state.movies.indexOf(movie);
+        this.state.movies[index2].isLiked = !this.state.movies[index2].isLiked;
+        this.setState({ moviesToShow: movies, movies });
     }
 
     handlePag = (page) => {
@@ -37,13 +40,22 @@ class Movies extends Component {
 
     handleFilter = (genre) => {
         console.log(genre);
+        const movies = [...this.state.movies];
+        if (genre !== 'All Genre') {
+            this.setState({ moviesToShow: movies.filter(m => m.genre.name === genre), pageNumber: 1 });
+        }
+
+        else {
+            this.setState({ moviesToShow: movies })
+        }
+
 
     }
 
     renderNumber() {
-        if (this.state.movies.length === 0) return <p>there are no movies in the database</p>
+        if (this.state.moviesToShow.length === 0) return <p>there are no movies in the database</p>
 
-        return <p>showing {this.state.movies.length} movies in the database</p>
+        return <p>showing {this.state.moviesToShow.length} movies in the database</p>
     }
 
 
