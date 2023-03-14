@@ -11,7 +11,8 @@ class Movies extends Component {
         moviesToShow: getMovies(),
         numbPerPage: 4,
         pageNumber: 1,
-        genres: getGenres()
+        genres: getGenres(),
+        filteredGenre: 'All Genre'
     }
 
     handleDelete = (id) => {
@@ -41,12 +42,13 @@ class Movies extends Component {
     handleFilter = (genre) => {
         console.log(genre);
         const movies = [...this.state.movies];
+
         if (genre !== 'All Genre') {
-            this.setState({ moviesToShow: movies.filter(m => m.genre.name === genre), pageNumber: 1 });
+            this.setState({ moviesToShow: movies.filter(m => m.genre.name === genre), pageNumber: 1, filteredGenre: genre });
         }
 
         else {
-            this.setState({ moviesToShow: movies })
+            this.setState({ moviesToShow: movies, filteredGenre: genre })
         }
 
 
@@ -62,9 +64,9 @@ class Movies extends Component {
     render() {
 
         return (<div className='row'>
-            <div className='col-3 m-3'><GenreList onFilter={this.handleFilter} genres={this.state.genres} /></div>
-            <div className='col-8'>
-                <p className='m-4'>{this.renderNumber()} </p>
+            <div className='col-3'><GenreList filteredGenre={this.state.filteredGenre} onFilter={this.handleFilter} genres={this.state.genres} /></div>
+            <div className='col'>
+                <p>{this.renderNumber()} </p>
                 <table className='table m-4'>
                     <thead>
                         <tr>
