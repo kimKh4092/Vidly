@@ -1,24 +1,29 @@
 
-import './App.css';
 import NavBar from './components/navBar';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import Rentals from './components/Rentals';
-import React, { Component } from 'react';
 import MoviesSection from './components/moviesSection';
-import Customers from './components/Customers'
-import NotFound from './components/notFound'
+import Customers from './components/pages/Customers'
+import NotFound from './components/pages/notFound'
+import LoginForm from './components/forms/LoginForm';
+import Rentals from './components/pages/Rentals';
+
+import { Route, Switch, Redirect } from 'react-router-dom';
+import React, { Component } from 'react';
+import './App.css';
+
 
 
 class App extends Component {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <NavBar />
-        <div className='content'>
+        <main className='container'>
+
+
           <Switch>
 
-
+            <Route path='/login' component={LoginForm} />
             <Route path='/customers' component={Customers} />
             <Route path='/rentals' component={Rentals} />
             <Route path='/movies' component={MoviesSection} />
@@ -29,9 +34,13 @@ class App extends Component {
 
           </Switch>
 
-        </div>
 
-      </div>
+        </main>
+      </React.Fragment>
+
+
+
+
 
     );
   }
