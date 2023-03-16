@@ -6,6 +6,7 @@ import { getGenres } from '../services/fakeGenreService';
 import GenreList from './genreList';
 import MoviesTable from './moviesTable';
 
+
 class Movies extends Component {
     state = {
         movies: getMovies(),
@@ -82,29 +83,34 @@ class Movies extends Component {
 
 
 
-        return (<div className='row'>
-            <div className='col-3'><GenreList filteredGenre={this.state.filteredGenre} onFilter={this.handleFilter} genres={this.state.genres} /></div>
-            <div className='col'>
-                <p>{this.renderNumber()} </p>
+        return (
 
-                <MoviesTable moviesToShow={this.showMovies()}
-                    numbPerPage={this.state.numbPerPage}
-                    pageNumber={this.state.pageNumber}
-                    sortedcolumn={this.state.sortedcolumn}
-                    handleLike={this.handleLike}
-                    handleDelete={this.handleDelete}
-                    handleSort={this.handleSort} />
+            <div className='row'>
+                <div className='col-3'><GenreList filteredGenre={this.state.filteredGenre} onFilter={this.handleFilter} genres={this.state.genres} /></div>
+                <div className='col'>
+                    <p>{this.renderNumber()} </p>
+
+                    <MoviesTable moviesToShow={this.showMovies()}
+                        numbPerPage={this.state.numbPerPage}
+                        pageNumber={this.state.pageNumber}
+                        sortedcolumn={this.state.sortedcolumn}
+                        handleLike={this.handleLike}
+                        handleDelete={this.handleDelete}
+                        handleSort={this.handleSort} />
 
 
-                <Pag numbOfPages={(this.state.moviesToShow.length / this.state.numbPerPage) + 1}
-                    onClick={this.handlePag}
-                    pageNumber={this.state.pageNumber} />
+                    <Pag numbOfPages={(this.state.moviesToShow.length / this.state.numbPerPage) + 1}
+                        onClick={this.handlePag}
+                        pageNumber={this.state.pageNumber} />
+                </div>
+
+
+
+
             </div>
 
+        );
 
-
-
-        </div>);
     }
 }
 
