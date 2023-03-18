@@ -5,12 +5,13 @@ import Pag from './pagination';
 import { getGenres } from '../services/fakeGenreService';
 import GenreList from './genreList';
 import MoviesTable from './moviesTable';
+import { Link } from 'react-router-dom';
 
 
 class Movies extends Component {
     state = {
-        movies: getMovies(),
-        moviesToShow: getMovies(),
+        movies: this.props.movies,
+        moviesToShow: this.props.movies,
         numbPerPage: 4,
         pageNumber: 1,
         genres: getGenres(),
@@ -25,6 +26,7 @@ class Movies extends Component {
         const allMovie = [...this.state.movies];
         allMovie.splice(index, 1);
         this.setState({ movies: allMovie, moviesToShow: movies });
+        this.props.onDelete(id);
     }
 
     handleLike = (movie) => {
@@ -43,7 +45,7 @@ class Movies extends Component {
     }
 
     handleFilter = (genre) => {
-        console.log(genre);
+
         const movies = [...this.state.movies];
 
         if (genre !== 'All Genre') {
@@ -88,6 +90,7 @@ class Movies extends Component {
             <div className='row'>
                 <div className='col-3'><GenreList filteredGenre={this.state.filteredGenre} onFilter={this.handleFilter} genres={this.state.genres} /></div>
                 <div className='col'>
+                    <button className='btn btn-primary m-2'><Link to='/movies/new' style={{ color: 'white', textDecoration: 'none' }}>New Movie</Link></button>
                     <p>{this.renderNumber()} </p>
 
                     <MoviesTable moviesToShow={this.showMovies()}
