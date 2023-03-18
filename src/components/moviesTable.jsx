@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Like from './likeComponent';
 import { Link } from 'react-router-dom';
 
+
 class MoviesTable extends Component {
 
     raiseSort = path => {
@@ -25,7 +26,7 @@ class MoviesTable extends Component {
 
     render() {
         return (
-            <table className='table m-4'>
+            <table className='table m-2'>
                 <thead>
                     <tr>
                         <th className='clickable' onClick={() => this.raiseSort("title")}>Title {this.renderSortIcon("title")}</th>

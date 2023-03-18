@@ -15,8 +15,9 @@ class Movies extends Component {
         numbPerPage: 4,
         pageNumber: 1,
         genres: getGenres(),
-        filteredGenre: 'All Genre',
-        sortedcolumn: { path: 'title', order: 'asc' }
+        filteredGenre: '',
+        sortedcolumn: { path: 'title', order: 'asc' },
+        filterElement: ''
     }
 
     handleDelete = (id) => {
@@ -44,20 +45,32 @@ class Movies extends Component {
         this.setState({ pageNumber: page });
     }
 
-    handleFilter = (genre) => {
-
+    handleFilter = (filterElement) => {
         const movies = [...this.state.movies];
 
-        if (genre !== 'All Genre') {
-            this.setState({ moviesToShow: movies.filter(m => m.genre.name === genre), pageNumber: 1, filteredGenre: genre });
+        if (typeof (filterElement) === 'object') {
+            const title = filterElement.target.value;
+            const filtered = movies.filter(m => m.title.toUpperCase().includes(title.toUpperCase()))
+            this.setState({ moviesToShow: filtered, filterElement: title, filteredGenre: '', pageNumber: 1 })
+
         }
 
-        else {
-            this.setState({ moviesToShow: movies, filteredGenre: genre })
-        }
+        if (typeof (filterElement) === 'string') {
+            const genre = filterElement;
+            if (genre !== 'All Genre') {
+                this.setState({ moviesToShow: movies.filter(m => m.genre.name === genre), pageNumber: 1, filteredGenre: genre, filterElement: '' });
+            }
 
+            else {
+                this.setState({ moviesToShow: movies, filteredGenre: genre, filterElement: '' })
+            }
+
+
+
+        }
 
     }
+
 
     handleSort = (sortedcolumn) => {
 
@@ -90,8 +103,18 @@ class Movies extends Component {
             <div className='row'>
                 <div className='col-3'><GenreList filteredGenre={this.state.filteredGenre} onFilter={this.handleFilter} genres={this.state.genres} /></div>
                 <div className='col'>
-                    <button className='btn btn-primary m-2'><Link to='/movies/new' style={{ color: 'white', textDecoration: 'none' }}>New Movie</Link></button>
-                    <p>{this.renderNumber()} </p>
+                    <button className='btn btn-primary m-2 '>
+                        <Link to='/movies/new' style={{ color: 'white', textDecoration: 'none' }}>New Movie</Link></button>
+
+                    <p className='m-2'>{this.renderNumber()} </p>
+                    <div className='form-group'>
+                        <input className='form-control m-2 mb-3'
+                            placeholder='Search...'
+                            onChange={this.handleFilter}
+                            value={this.state.filterElement}
+
+                        /></div>
+
 
                     <MoviesTable moviesToShow={this.showMovies()}
                         numbPerPage={this.state.numbPerPage}
