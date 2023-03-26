@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 import Input from './input';
 import Joi from 'joi-browser';
 import Form from './form';
-import { saveMovie } from '../../services/fakeMovieService';
-import { Link } from 'react-router-dom';
+
 
 class MovieForm extends Form {
     state = {
@@ -21,19 +20,14 @@ class MovieForm extends Form {
     schema = {
         title: Joi.string().required().label('Title'),
         genre: Joi.string().required().label('Genre'),
-        numbInStock: Joi.number().integer().required().min(0).max(100).label('Number In Stock'),
+        numbInStock: Joi.number().required().min(0).max(100).label('Number In Stock'),
         rate: Joi.number().min(0).max(10).required().label('Rate'),
     }
-
 
     doSubmit = (data, id) => {
         this.props.history.push('/movies');
         const movie = { ...data }
         this.props.onSave(movie, id);
-
-
-
-
     }
 
     render() {
@@ -60,10 +54,10 @@ class MovieForm extends Form {
                             <option value="Action">Action</option>
                             <option value="Comedy">Comedy</option>
                             <option value="Thriller">Thriller</option>
+                            <option value="Romance">Romance</option>
 
                         </select>
                     </div>
-
 
                     <Input name='numbInStock'
                         type='text'

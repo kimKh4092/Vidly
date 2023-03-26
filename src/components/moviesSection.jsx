@@ -2,18 +2,23 @@
 import React, { Component } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import Movies from './movies'
-import { getMovies, saveMovie } from '../services/fakeMovieService';
+import { getMovies, deleteMovie } from '../services/movieService';
 import MovieForm from './forms/movieForm';
 import NotFound from './pages/notFound';
-
+import http from '../services/httpService'
 
 class MoviesSection extends Component {
     state = {
-        movies: getMovies()
+        movies: []
     }
 
-    saveMovie = (movie, id) => {
-        console.log(movie);
+    async componentDidMount() {
+        const { data: movies } = await getMovies();
+        this.setState({ movies })
+    }
+
+    saveMovie = async (movie, id) => {
+
         const movies = [...this.state.movies]
         let movieInDb = movies.find(m => m._id === id) || {};
         movieInDb.title = movie.title;
@@ -23,27 +28,44 @@ class MoviesSection extends Component {
         movieInDb.dailyRentalRate = movie.rate;
 
         if (!movieInDb._id) {
+
             movieInDb._id = Date.now();
-            movies.push(movieInDb);
+            movieInDb.genre._id = movieInDb._id;
+            console.log(movieInDb)
+            const { data: movie } = await http.post('http://localhost:3900/api/movies', movieInDb);
+            movies.push(movie);
+
+        }
+        else {
+            const body = { ...movieInDb };
+            delete body._id;
+            const { data: movie } = await http.put('http://localhost:3900/api/movies/' + movieInDb._id, body);
+            movies.push(movie);
         }
 
-        this.setState({ movies })
     }
 
-
     handleDelete = (id) => {
-        let movie = this.state.movies.find(m => m._id === id);
-        let index = this.state.movies.indexOf(movie);
-        const allMovie = [...this.state.movies];
-        allMovie.splice(index, 1);
-        this.setState({ movies: allMovie });
+        const originalMovies = this.state.movies;
+        const allMovies = [...this.state.movies].filter(m => m._id !== id)
+        this.setState({ movies: allMovies });
+
+        try {
+            deleteMovie(id);
+        }
+        catch (ex) {
+            if (ex.response && ex.response.status === 404) {
+                alert('this movie has already been deleted')
+            }
+            this.setState({ movies: originalMovies })
+        }
 
     }
 
     render() {
         return (
             <Switch>
-                <Route path='/movies' exact render={() => <Movies movies={this.state.movies} onDelete={this.handleDelete} />} />
+                <Route path='/movies' exact render={() => <Movies onDelete={this.handleDelete} movies={this.state.movies} />} />
 
                 {this.state.movies.map(movie =>
                     < Route key={movie._id} path={'/movies/' + movie._id} render={(props) => <MovieForm

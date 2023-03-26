@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { getMovies } from '../services/fakeMovieService';
+import { getMovies, deleteMovie } from '../services/movieService';
 import _ from 'lodash'
 import Pag from './pagination';
-import { getGenres } from '../services/fakeGenreService';
 import GenreList from './genreList';
 import MoviesTable from './moviesTable';
 import { Link } from 'react-router-dom';
-
+import { getGenres } from '../services/genreService';
 
 class Movies extends Component {
     state = {
@@ -14,19 +13,22 @@ class Movies extends Component {
         moviesToShow: this.props.movies,
         numbPerPage: 4,
         pageNumber: 1,
-        genres: getGenres(),
+        genres: [],
         filteredGenre: '',
         sortedcolumn: { path: 'title', order: 'asc' },
         filterElement: ''
     }
 
+    async componentDidMount() {
+        const { data: genres } = await getGenres()
+        const { data: movies } = await getMovies()
+        this.setState({ genres, movies, moviesToShow: movies })
+    }
+
     handleDelete = (id) => {
         let movies = this.state.moviesToShow.filter(m => m._id !== id);
-        let movie = this.state.movies.find(m => m._id === id);
-        let index = this.state.movies.indexOf(movie);
-        const allMovie = [...this.state.movies];
-        allMovie.splice(index, 1);
-        this.setState({ movies: allMovie, moviesToShow: movies });
+        const allMovies = [...this.state.movies].filter(m => m._id !== id)
+        this.setState({ moviesToShow: movies, movies: allMovies });
         this.props.onDelete(id);
     }
 
@@ -96,8 +98,6 @@ class Movies extends Component {
 
     render() {
 
-
-
         return (
 
             <div className='row'>
@@ -129,8 +129,6 @@ class Movies extends Component {
                         onClick={this.handlePag}
                         pageNumber={this.state.pageNumber} />
                 </div>
-
-
 
 
             </div>
