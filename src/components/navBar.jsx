@@ -21,12 +21,24 @@ class NavBar extends Component {
                         <li className="nav-item">
                             <NavLink className="nav-link" to="/rentals">Rentals</NavLink>
                         </li>
+
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/login">Login</NavLink>
+                            {!this.props.user && <NavLink className="nav-link" to="/login">Login</NavLink>}
+
                         </li>
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/register">Register</NavLink>
+                            {!this.props.user && <NavLink className="nav-link" to="/register">Register</NavLink>}
+
                         </li>
+                        <li className="nav-item">
+                            {this.props.user && <NavLink className="nav-link" to="/profile">{this.props.user.name}</NavLink>}
+
+                        </li>
+                        <li className="nav-item">
+                            {this.props.user && <NavLink className="nav-link" to="/logout">Logout</NavLink>}
+
+                        </li>
+
 
                     </ul>
                 </div>

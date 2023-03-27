@@ -34,8 +34,9 @@ class Form extends Component {
         const errors = this.validate();
         this.setState({ errors: errors || {} })
         if (errors) return;
+        this.doSubmit();
 
-        this.doSubmit(this.state.data, this.props.movieId);
+        // this.doSubmit(this.state.data, this.props.movieId);
 
     };
 

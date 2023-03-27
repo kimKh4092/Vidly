@@ -46,9 +46,10 @@ class MoviesTable extends Component {
                             <td>{movie.numberInStock}</td>
                             <td>{movie.dailyRentalRate}</td>
                             <td><Like getLiked={() => this.props.handleLike(movie)} liked={movie.isLiked} /></td>
-                            <td><button
+                            <td>{this.props.user && this.props.user.isAdmin && <button
                                 onClick={() => this.props.handleDelete(movie._id)}
-                                className='btn btn-danger btn-sm m-2'>Delete</button></td>
+                                className='btn btn-danger btn-sm m-2'>Delete</button>}
+                            </td>
 
 
                         </tr >

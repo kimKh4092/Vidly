@@ -5,7 +5,8 @@ import Movies from './movies'
 import { getMovies, deleteMovie } from '../services/movieService';
 import MovieForm from './forms/movieForm';
 import NotFound from './pages/notFound';
-import http from '../services/httpService'
+import http from '../services/httpService';
+import { getCurrentUser } from '../services/authService';
 
 class MoviesSection extends Component {
     state = {
@@ -63,9 +64,17 @@ class MoviesSection extends Component {
     }
 
     render() {
+        const { user } = this.props;
+        const currentUser = getCurrentUser()
         return (
+
             <Switch>
-                <Route path='/movies' exact render={() => <Movies onDelete={this.handleDelete} movies={this.state.movies} />} />
+
+
+                <Route path='/movies' exact render={() => <Movies
+                    onDelete={this.handleDelete}
+                    movies={this.state.movies}
+                    user={user} />} />
 
                 {this.state.movies.map(movie =>
                     < Route key={movie._id} path={'/movies/' + movie._id} render={(props) => <MovieForm
@@ -76,14 +85,30 @@ class MoviesSection extends Component {
                         movieId={movie._id} {...props}
                         onSave={this.saveMovie} />} />)
                 }
-                <Route path='/movies/new' render={(props) => <MovieForm
-                    genre=''
-                    title=''
-                    rate=''
-                    numbInStock=''
-                    movieId=''
-                    {...props}
-                    onSave={this.saveMovie} />} />
+                <Route path='/movies/new' render={(props) => {
+                    if (currentUser) {
+
+                        return <MovieForm
+                            genre=''
+                            title=''
+                            rate=''
+                            numbInStock=''
+                            movieId=''
+                            {...props}
+                            onSave={this.saveMovie} />
+                    }
+                    //error
+                    //gonna check later
+                    if (!currentUser) {
+
+                        return <Redirect to={{
+                            pathname: '/login',
+                            state: { from: props.location }
+                        }} />
+                    }
+
+                }
+                } />
                 <Route path='/not-found' component={NotFound} />
                 <Redirect to='/not-found' />
 

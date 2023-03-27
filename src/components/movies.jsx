@@ -103,8 +103,9 @@ class Movies extends Component {
             <div className='row'>
                 <div className='col-3'><GenreList filteredGenre={this.state.filteredGenre} onFilter={this.handleFilter} genres={this.state.genres} /></div>
                 <div className='col'>
-                    <button className='btn btn-primary m-2 '>
-                        <Link to='/movies/new' style={{ color: 'white', textDecoration: 'none' }}>New Movie</Link></button>
+                    {this.props.user && <button className='btn btn-primary m-2 '>
+                        <Link to='/movies/new' style={{ color: 'white', textDecoration: 'none' }}>New Movie</Link></button>}
+
 
                     <p className='m-2'>{this.renderNumber()} </p>
                     <div className='form-group'>
@@ -122,7 +123,8 @@ class Movies extends Component {
                         sortedcolumn={this.state.sortedcolumn}
                         handleLike={this.handleLike}
                         handleDelete={this.handleDelete}
-                        handleSort={this.handleSort} />
+                        handleSort={this.handleSort}
+                        user={this.props.user} />
 
 
                     <Pag numbOfPages={(this.state.moviesToShow.length / this.state.numbPerPage) + 1}

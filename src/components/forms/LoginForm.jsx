@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Input from './input';
 import Joi from 'joi-browser';
 import Form from './form';
+import { login } from '../../services/authService';
 
 class LoginForm extends Form {
     state = {
@@ -16,8 +17,24 @@ class LoginForm extends Form {
     }
 
 
-    doSubmit = () => {
-        console.log('submitted')
+    doSubmit = async () => {
+        try {
+            const { data } = this.state;
+            const { data: jwt } = await login(data.username, data.password)
+            localStorage.setItem('token', jwt);
+            const { state } = this.props.location;
+            window.location = state ? state.from.pathname : '/';
+
+
+        } catch (ex) {
+            if (ex.response && ex.response.status === 400) {
+                const errors = { ...this.state.errors };
+                errors.username = ex.response.data;
+                this.setState({ errors })
+            }
+
+        }
+
     }
 
     render() {
